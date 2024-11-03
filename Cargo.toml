@@ -1,0 +1,9 @@
+[package]
+name = "stark101rs"
+version = "0.1.0"
+edition = "2021"
+repository = "https://github.com/FoodChain1028/stark101rs.git"
+
+[dependencies]
+modulo = "0.1.2"
+rand = { version = "0.8.5", features = ["std"] }
