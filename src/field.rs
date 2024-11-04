@@ -1,5 +1,7 @@
 use modulo::Mod;
 use rand::{self, Rng};
+use std::cmp::Ordering;
+use std::fmt;
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 #[derive(Debug, Clone)]
@@ -34,6 +36,10 @@ impl FieldElement {
         3 * 2u32.pow(30) + 1
     }
 
+    pub fn neg(&self) -> Self {
+        Self::zero() - *self
+    }
+
     /// use Fermat's little theorem
     /// a^p = a (mod p)
     /// a^{p-2} * a = 1 (mod p)
@@ -59,10 +65,6 @@ impl FieldElement {
         }
         Self::new(result)
     }
-
-    // pub fn clone(&self) -> Self {
-    //     Self::new(self.val)
-    // }
 
     pub fn get_generator(&self) -> u32 {
         self.generator
@@ -93,6 +95,12 @@ impl FieldElement {
 
 impl Copy for FieldElement {}
 
+impl fmt::Display for FieldElement {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.val)
+    }
+}
+
 impl PartialEq for FieldElement {
     fn eq(&self, other: &Self) -> bool {
         self.val == other.val // just check the value here
@@ -100,6 +108,18 @@ impl PartialEq for FieldElement {
 }
 
 impl Eq for FieldElement {}
+
+impl PartialOrd for FieldElement {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for FieldElement {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.val.cmp(&other.val)
+    }
+}
 
 impl Add for FieldElement {
     type Output = Self;
@@ -260,5 +280,25 @@ mod tests {
             let a = FieldElement::random_element();
             assert!(a.val < FieldElement::get_prime());
         }
+    }
+
+    #[test]
+    fn test_display() {
+        let a = FieldElement::new(10);
+        assert_eq!(a.to_string(), "10");
+    }
+
+    #[test]
+    fn test_comparison() {
+        let a = FieldElement::new(10);
+        let b = FieldElement::new(10);
+        let c = FieldElement::new(11);
+        let d = FieldElement::new(12);
+
+        assert!(a == b);
+        assert!(a < c);
+        assert!(d > c);
+        assert!(a <= d);
+        assert!(c >= a);
     }
 }
