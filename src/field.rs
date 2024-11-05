@@ -1,5 +1,6 @@
 use modulo::Mod;
 use rand::{self, Rng};
+use std::fmt::Display;
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 #[derive(Debug, Clone)]
@@ -166,6 +167,12 @@ impl DivAssign for FieldElement {
     fn div_assign(&mut self, other: Self) {
         let other_inv = other.inverse();
         *self *= other_inv;
+    }
+}
+
+impl Display for FieldElement {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.val)
     }
 }
 
