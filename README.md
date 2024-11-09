@@ -18,6 +18,7 @@ This project aims to:
 
 ### Basic Components
 
+- [X] `field`
 - [ ] `polynomials`
 - [ ] `merkle`
 - [ ] `channel`
